@@ -23,4 +23,10 @@ models:
   jaffle_shop:
       materialized: table
       staging:
-        materialized: view
+        # tabela, nao view: view existe so no metastore, e o dbt-runner tem
+        # um Derby proprio, separado do metastore da plataforma. Como Derby
+        # embarcado aceita um processo por vez, unificar quebrou todo dbt run
+        # em 21/08. Materializando como tabela o arquivo Delta fica em disco e
+        # o DQ da plataforma resolve pelo caminho: as 8 regras dos stg_ que
+        # falhavam desde maio passaram a rodar.
+        materialized: table
